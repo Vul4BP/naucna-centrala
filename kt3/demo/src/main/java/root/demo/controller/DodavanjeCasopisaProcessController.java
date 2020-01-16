@@ -1,0 +1,87 @@
+package root.demo.controller;
+
+import org.camunda.bpm.engine.FormService;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.task.Task;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import root.demo.Dto.FormFieldsDto;
+import root.demo.Dto.FormSubmissionDto;
+import root.demo.Dto.TaskDto;
+import root.demo.services.others.ProcessHelperService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+//Kontroler za proces dodavanja casopisa
+
+@Controller
+@RequestMapping("/dodavanjecasopisa")
+public class DodavanjeCasopisaProcessController {
+
+    @Autowired
+    private RuntimeService runtimeService;
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private FormService formService;
+
+    @Autowired
+    private ProcessHelperService processHelperService;
+
+    private String processName = "novi_casopis";
+
+    //POCINJE PROCES DODAVANJA CASOPISA, VRACA SVA POLJA ZA FORMU ZA DODAVANJE CASOPISA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @GetMapping(path = "/start/{username}", produces = "application/json")
+    public @ResponseBody FormFieldsDto startReg(@PathVariable String username) {
+        System.out.println("PROCES DODAVANJA CASOPISA JE POKRENUT");
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey(processName);
+        runtimeService.setVariable(pi.getId(),"username",username);
+        Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
+        return processHelperService.createFormFieldsDto(task);
+    }
+
+    //VRACAJU SE PODACI SA FORME ZA DODAVANJE CASOPISA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @PostMapping(path = "/post/casopisform/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity post(@RequestBody List<FormSubmissionDto> dto, @PathVariable String taskId) {
+        System.out.println("FORMA ZA DODAVANJE CASOPISA JE POSLATA");
+        HashMap<String, Object> map = processHelperService.mapListToDto(dto);
+
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.setVariable(processInstanceId, "casopis", dto);
+        formService.submitTaskForm(taskId, map);
+
+        if(runtimeService.getVariable(processInstanceId,"validacija1").equals(false)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    //VRACA UREDNIKU SVE TASKOVE ZA DODAVANJE UREDNIKA I RECENZENATA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @GetMapping(path = "/get/tasks/active/{username}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<TaskDto>> getActiveProcessTasksForUser(@PathVariable String username) {
+        return processHelperService.getActiveTasks(username, processName);
+    }
+
+    //VRACA SVA POLJA ZA FORMU ZA DODAVANJE UREDNIKA I RECENZENATA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @GetMapping(path = "/get/dodavanjeUrednikaIRecenzenataform/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDto getTaskForRecenzenti(@PathVariable String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        return processHelperService.createFormFieldsDto(task);
+    }
+}
