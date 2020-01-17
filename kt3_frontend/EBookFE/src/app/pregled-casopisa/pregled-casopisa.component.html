@@ -1,0 +1,67 @@
+<h5>Zahtevi za pregled casopisa</h5>
+<div>
+  <table *ngIf="tasks && tasks.length > 0">
+    <tr><th>Ime Taska</th><th colspan="2">Id Taska</th></tr>
+    <tr *ngFor="let task of tasks"><td>{{task.name}}</td><td>{{task.taskId}}</td><td><button (click)="getPregledCasopisaForm(task.taskId)">Get Form</button></td></tr>
+  </table>
+</div><br>
+
+<table *ngIf="casopis">
+  <tr><th colspan="2">Casopis</th></tr>
+  <tr><td><label for={{casopis.naziv}}>Naziv </label></td><td><label>{{casopis.naziv}}</label></td></tr>
+  <tr><td><label for={{casopis.issn}}>Issn </label></td><td><label>{{casopis.issn}}</label></td></tr>
+  <tr><td><label for={{casopis.clanarina}}>Clanarina </label></td><td><label>{{casopis.clanarina}}</label></td></tr>
+  <tr><td><label for={{casopis.komeSePlaca}}>Kome se placa </label></td><td><label>{{casopis.komeSePlaca}}</label></td></tr>
+  <tr>
+    <td><label>Oblasti </label></td>
+    <td><select name="naucneoblasti" ngModel>
+      <option *ngFor="let val of casopis.naucneoblasti" value={{val}}>
+        {{val.name}}
+      </option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><label>Nacini placanja </label></td>
+    <td><select name="naciniPlacanja" ngModel>
+      <option *ngFor="let val of casopis.naciniPlacanja" value={{val}}>
+        {{val.name}}
+      </option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><label>Recenzenti </label></td>
+    <td><select name="recenzenti" ngModel>
+      <option *ngFor="let val of casopis.recenzenti" value={{val}}>
+        {{val.username}}
+      </option>
+    </select></td>
+  </tr>
+  <tr>
+    <td><label>Urednici </label></td>
+    <td><select name="urednici" ngModel>
+      <option *ngFor="let val of casopis.urednici" value={{val}}>
+        {{val.username}}
+      </option>
+    </select></td>
+  </tr>
+</table>
+
+<h5 *ngIf="formFields && formFields.length > 0">Forma</h5>
+<div>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate *ngIf="formFields.length > 0">
+    <div *ngFor="let field of formFields" >
+        <label for={{field.id}}>{{field.label}}</label>
+
+        <input type="text" name={{field.id}} ngModel  *ngIf="field.type.name=='string'" >
+        <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+        <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+        <select name="field.id" *ngIf="field.type.name=='enum'">
+          <option *ngFor="let val of enumValues" value={{val}}>
+            {{field.type.values[val]}}
+          </option>
+        </select>
+    </div>
+    
+    <input type="submit">
+  </form>
+</div>

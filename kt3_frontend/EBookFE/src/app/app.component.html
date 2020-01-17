@@ -1,0 +1,20 @@
+
+<ul>
+  <!--NE-ULOGOVANI-->
+  <li *ngIf="authService.isLoggedIn() == false" ><a [routerLink]="['/login']" >Prijava</a></li>
+  <li *ngIf="authService.isLoggedIn() == false" ><a [routerLink]="['/registrate']" >Registracija</a></li>
+
+  <!--ADMIN-->
+  <li *ngIf="authService.isLoggedIn() && authService.isAdmin()" ><a [routerLink]="['/recenzenti']" >Zahtevi za recenzente</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isAdmin()" ><a [routerLink]="['/casopisi']" >Zahtevi za pregled casopisa</a></li>
+
+  <!--UREDNIK-->
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjecasopisa']" >Dodavanje casopisa</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjereciured']" >Dodavanje recenzenata i urednika u casopis</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/editcasopis']" >Zahtevi za izmenu casopisa</a></li>
+
+  <!--SVI-ULOGOVANI-->
+  <li *ngIf="authService.isLoggedIn() == true" ><a [routerLink]="['/userprofile']" >Profil</a></li> 
+  <li *ngIf="authService.isLoggedIn() == true" ><a (click)="logout()" >Odjava</a></li> 
+</ul>
+<router-outlet></router-outlet>

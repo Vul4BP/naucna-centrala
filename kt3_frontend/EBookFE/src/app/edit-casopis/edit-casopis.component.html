@@ -1,0 +1,7 @@
+<h5>Izmena casopisa</h5>
+<div>
+  <table *ngIf="tasks && tasks.length > 0">
+    <tr><th>Ime Taska</th><th colspan="2">Id Taska</th></tr>
+    <tr *ngFor="let task of tasks"><td>{{task.name}}</td><td>{{task.taskId}}</td><td><button (click)="redirectTo(task.taskId)">Get Form</button></td></tr>
+  </table>
+</div>

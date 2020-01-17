@@ -1,0 +1,21 @@
+<h5>Login</h5>
+<div>
+  <form (ngSubmit)="onSubmit()" ngNativeValidate>
+    <table>
+      <tr>
+        <td><label for="username">Username: </label></td>
+        <td><input id="username" [(ngModel)]="username" type="text" name="username"></td>
+      </tr>
+      <tr>
+        <td><label for="password">Password:</label></td>
+        <td><input id="password" [(ngModel)]="password" type="password" name="password"></td>
+      </tr>
+      <tr>
+        <td colspan="2"><input type="submit"></td>
+      </tr>
+    </table>
+  </form>
+</div>
+<div>
+  <label class="error">{{message}}</label>
+</div>

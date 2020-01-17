@@ -1,0 +1,27 @@
+<h5>Zahtevi za recenzente</h5>
+<div>
+  <table *ngIf="tasks && tasks.length > 0">
+    <tr><th>Ime Taska</th><th colspan="2">Id Taska</th></tr>
+    <tr *ngFor="let task of tasks"><td>{{task.name}}</td><td>{{task.taskId}}</td><td><button (click)="getRecenzentiForm(task.taskId)">Get Form</button></td></tr>
+  </table>
+</div>
+
+<div>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate *ngIf="formFields.length > 0">
+
+    <div *ngFor="let field of formFields" >
+        <label for={{field.id}}>{{field.label}}</label>
+
+        <input type="text" name={{field.id}} ngModel  *ngIf="field.type.name=='string'" >
+        <input type="checkbox" name={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+        <input type="number" name={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+        <select name="field.id" *ngIf="field.type.name=='enum'">
+          <option *ngFor="let val of enumValues" value={{val}}>
+            {{field.type.values[val]}}
+          </option>
+        </select>
+    </div>
+    
+    <input type="submit">
+  </form>
+</div>
