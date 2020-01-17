@@ -220,7 +220,14 @@ public class CasopisService implements ICasopisService{
         UserDb glavniUrednik = casopis.getUrednici().get(0);
         List<UserDb> uredniciFinal = new ArrayList<>();
         uredniciFinal.add(glavniUrednik);
-        uredniciFinal.addAll(uredniciDb);
+        //uredniciFinal.addAll(uredniciDb);
+
+        //ako je selektovao glavnog urendika da ga ne doda opet
+        for(UserDb u : uredniciDb){
+            if(!u.getUsername().equals(glavniUrednik.getUsername())){
+                uredniciFinal.add(u);
+            }
+        }
 
         casopis.setRecenzenti(recenzentiDb);
         casopis.setUrednici(uredniciFinal);

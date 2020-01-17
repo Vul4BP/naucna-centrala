@@ -107,7 +107,7 @@ public class RegisterProcessController {
             List<HistoricProcessInstance> historyProc = historyService.createHistoricProcessInstanceQuery().completed().list();
             for (HistoricProcessInstance process : historyProc) {
                 if(process.getId().equals(processInstanceId)){
-                    message = "Registration has been completed";
+                    message = "Registracija je uspesno izvrsena";
                     body = "{ \"res\" : \"" + message + "\" }";
                     return new ResponseEntity<String>(body, HttpStatus.OK);
                 }
@@ -126,9 +126,11 @@ public class RegisterProcessController {
         }
 
         if(status == false){
-            message = "Please confirm registration. Email has been sent to " + userDb.getEmail();
+            message = "Morate da potvrdite registraciju. Link je poslat na " + userDb.getEmail();
         }else if(status == true && recenzent == true){
-            message = "Registration has been completed, but admin needs to approve your proposal to be Recenzent";
+            message = "Registracija je uspesno izvrsena. ";
+            message += "Da bi ste postali recenzent morate sacekati da admin odobri vas zahtev. ";
+            message += "Ako admin odbije vas zahtev, imate ulogu obicnog korisnika";
         }
 
         body = "{ \"res\" : \"" + message + "\" }";
