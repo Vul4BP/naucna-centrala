@@ -13,7 +13,7 @@ public class CasopisDto {
     private Long clanarina;
     private String komeSePlaca;
     private boolean enabled;
-    private List<NaucnaOblast> oblasti;
+    private List<NaucnaOblast> naucneoblasti;
     private List<UserDto> urednici;
     private List<UserDto> recenzenti;
     private List<NacinPlacanja> naciniPlacanja;

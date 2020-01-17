@@ -43,7 +43,7 @@ public class ValidateCasopisFormService implements JavaDelegate{
                 Object obj = formField.getFieldValue();
                 ObjectMapper mapper = new ObjectMapper();
                 List<NaucnaOblast> naucneOblasti = mapper.convertValue(obj, new TypeReference<List<NaucnaOblast>>() { });
-                casopisDto.setOblasti(naucneOblasti);
+                casopisDto.setNaucneoblasti(naucneOblasti);
             }
             if(formField.getFieldId().equals("placanja")) {
                 Object obj = formField.getFieldValue();
@@ -54,15 +54,28 @@ public class ValidateCasopisFormService implements JavaDelegate{
             }
         }
 
-        if(casopisService.validateCasopis(casopisDto)){
-            String username = (String)execution.getVariable("username");
-            CasopisDto dodatiCasopisDto = casopisService.addCasopis(casopisDto, username);
-            if(dodatiCasopisDto != null) {
-                execution.setVariable("validacija1", true);
-                System.out.println("VALIDACIJA CASOPIS FORME USPESNA");
+        boolean editovanje = (boolean)execution.getVariable("editovanje");
+        if(editovanje == false){
+            if(casopisService.validateCasopis(casopisDto)){
+                String username = (String)execution.getVariable("username");
+                CasopisDto dodatiCasopisDto = casopisService.addCasopis(casopisDto, username);
+                if(dodatiCasopisDto != null) {
+                    execution.setVariable("validacija1", true);
+                    System.out.println("VALIDACIJA CASOPIS FORME USPESNA");
+                }
+            }else{
+                System.out.println("VALIDACIJA CASOPIS FORME NEUSPESNA");
             }
         }else{
-            System.out.println("VALIDACIJA CASOPIS FORME NEUSPESNA");
+            if(casopisService.validateEditovanjeCasopis(casopisDto)){
+                CasopisDto editovaniCasopisDto = casopisService.editCasopis(casopisDto);
+                if(editovaniCasopisDto != null) {
+                    execution.setVariable("validacija1", true);
+                    System.out.println("VALIDACIJA CASOPIS FORME USPESNA");
+                }
+            }else{
+                System.out.println("VALIDACIJA CASOPIS FORME NEUSPESNA");
+            }
         }
     }
 }

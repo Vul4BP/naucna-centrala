@@ -16,7 +16,6 @@ import root.demo.Dto.FormSubmissionDto;
 import root.demo.Dto.TaskDto;
 import root.demo.services.others.ProcessHelperService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,7 +37,7 @@ public class DodavanjeCasopisaProcessController {
     @Autowired
     private ProcessHelperService processHelperService;
 
-    private String processName = "novi_casopis";
+    private String processName = "dodavanje_casopisa_process";
 
     //POCINJE PROCES DODAVANJA CASOPISA, VRACA SVA POLJA ZA FORMU ZA DODAVANJE CASOPISA
     @PreAuthorize("hasRole('UREDNIK')")
@@ -70,11 +69,19 @@ public class DodavanjeCasopisaProcessController {
         }
     }
 
-    //VRACA UREDNIKU SVE TASKOVE ZA DODAVANJE UREDNIKA I RECENZENATA
-    @PreAuthorize("hasRole('UREDNIK')")
+    //VRACA UREDNIKU SVE TASKOVE ZA DODAVANJE UREDNIKA I RECENZENATA, I VRACA ADMINU SVE TASKOVE ZA PREGLED CASOPISA
+    @PreAuthorize("hasRole('UREDNIK') or hasRole('ADMIN')")
     @GetMapping(path = "/get/tasks/active/{username}", produces = "application/json")
     public @ResponseBody ResponseEntity<List<TaskDto>> getActiveProcessTasksForUser(@PathVariable String username) {
         return processHelperService.getActiveTasks(username, processName);
+    }
+
+    //VRACA AKTIVNE TASKOVE PO IMENU TASKA
+    @PreAuthorize("hasRole('UREDNIK') or hasRole('ADMIN')")
+    @GetMapping(path = "/get/tasks/active/{username}/{taskName}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<TaskDto>>
+    getActiveProcessByTaskNameForUser(@PathVariable String username, @PathVariable String taskName) {
+        return processHelperService.getActiveTasksByName(username, processName, taskName);
     }
 
     //VRACA SVA POLJA ZA FORMU ZA DODAVANJE UREDNIKA I RECENZENATA
@@ -84,4 +91,57 @@ public class DodavanjeCasopisaProcessController {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         return processHelperService.createFormFieldsDto(task);
     }
+
+    //VRACAJU SE PODACI SA FORME ZA DODAVANJE UREDNIKA I RECENZENATA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @PostMapping(path = "/post/dodavanjeUrednikaIRecenzenataform/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity postFormData(@RequestBody List<FormSubmissionDto> dto, @PathVariable String taskId) {
+        System.out.println("FORMA ZA DODAVANJE UREDNIKA I RECENZENATA JE POSLATA");
+        HashMap<String, Object> map = processHelperService.mapListToDto(dto);
+
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.setVariable(processInstanceId, "uredniciIRecenzenti", dto);
+        formService.submitTaskForm(taskId, map);
+
+        if(runtimeService.getVariable(processInstanceId,"validacija2").equals(false)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    //VRACA SVA POLJA ZA FORMU ZA POTVRDU CASOPISA
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(path = "/get/pregledcasopisaform/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDto getTaskForPregledCasopisa(@PathVariable String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        return processHelperService.createFormFieldsDto(task);
+    }
+
+    //VRACAJU SE PODACI SA FORME ZA POTVRDU CASOPISA
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(path = "/post/pregledcasopisaform/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity postPregledCasopisa(@RequestBody List<FormSubmissionDto> dto, @PathVariable String taskId) {
+        HashMap<String, Object> map = processHelperService.mapListToDto(dto);
+
+        try {
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            formService.submitTaskForm(taskId, map);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //VRACA SVA POLJA ZA FORMU ZA DODAVANJE CASOPISA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @GetMapping(path = "/get/dodavanjecasopisa/{taskId}", produces = "application/json")
+    public @ResponseBody FormFieldsDto getTaskDodavanjeCasopisa(@PathVariable String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        return processHelperService.createFormFieldsDto(task);
+    }
+
+
 }

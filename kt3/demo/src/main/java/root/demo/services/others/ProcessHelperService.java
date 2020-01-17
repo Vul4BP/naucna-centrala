@@ -78,5 +78,23 @@ public class ProcessHelperService {
 
         return new ResponseEntity(this.createListOfTaskDtos(tasks),  HttpStatus.OK);
     }
+
+    public ResponseEntity<List<TaskDto>> getActiveTasksByName(String username, String processName, String taskName){
+        List<ProcessInstance> processInstances = runtimeService.createProcessInstanceQuery()
+                .processDefinitionKey(processName)
+                .active()
+                .list();
+
+        List<Task> tasks = new ArrayList<Task>();
+
+        for(ProcessInstance pi : processInstances){
+            Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).taskAssignee(username).taskName(taskName).singleResult();
+            if(task!=null) {
+                tasks.add(task);
+            }
+        }
+
+        return new ResponseEntity(this.createListOfTaskDtos(tasks),  HttpStatus.OK);
+    }
 }
 

@@ -142,7 +142,7 @@ public class RegisterProcessController {
         return processHelperService.getActiveTasks(username, processName);
     }
 
-    //VRACA SVA POLJA ZA FORMU ZA REGISTRACIJU
+    //VRACA SVA POLJA ZA FORMU ZA POTVRDU RECENZENTA
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/get/recenzentiform/{taskId}", produces = "application/json")
     public @ResponseBody FormFieldsDto getTaskForRecenzenti(@PathVariable String taskId) {
