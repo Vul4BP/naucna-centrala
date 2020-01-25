@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 public class CasopisDto {
+    private Long id;
     private String naziv;
     private String issn;
     private Long clanarina;

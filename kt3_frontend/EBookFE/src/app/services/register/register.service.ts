@@ -10,7 +10,7 @@ export class RegisterService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080/registration";
+    this.url = "https://localhost:5005/registration";
   }
 
   startProcess(){

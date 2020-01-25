@@ -87,7 +87,7 @@ public class RegisterProcessController {
             return new ResponseEntity<String>("Invalid link.", HttpStatus.BAD_REQUEST);
         }
 
-        String redirectUrl = "http://localhost:4200/regresult/" + processInstanceId;
+        String redirectUrl = "https://localhost:5004/regresult/" + processInstanceId;
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectUrl).build();
     }
 

@@ -73,44 +73,6 @@ export class DodavanjeCasopisaComponent implements OnInit {
         }
       );
      });
-        
-    /*
-    let username = authService.getUsername();
-    let x = dodavanjeCasopisaService.startProcess(username);
-    x.subscribe(
-      res => {
-        console.log(res);
-        this.formFieldsDto = res;
-        this.formFields = res.formFields;
-        this.processInstance = res.processInstanceId;
-        this.formFields.forEach( (field) =>{  
-          if( field.type.name=='enum'){
-            this.enumValues[field.id] = Object.keys(field.type.values);
-          }
-        });
-
-        let y = naucnaOblastService.getAll();
-        y.subscribe(
-          res => {
-            console.log(res);
-            this.listaOblasti = res;
-
-            let z = nacinPlacanjaService.getAll();
-            z.subscribe(
-              res => {
-                console.log(res);
-                this.listaPlacanja = res;
-              }
-            );
-          }
-        );
-      },
-      err => {
-        console.log("Error occured");
-        this.message = "Desila se greska.";
-      }
-    );
-    */
   }
 
   ngOnInit() {

@@ -10,7 +10,7 @@ export class UserService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080/userDb";
+    this.url = "https://localhost:5005/userDb";
   }
 
   getAllByRole(role: String){

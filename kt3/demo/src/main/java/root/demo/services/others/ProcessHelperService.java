@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import root.demo.Dto.FormFieldsDto;
 import root.demo.Dto.FormSubmissionDto;
 import root.demo.Dto.TaskDto;
+import root.demo.model.Casopis;
+import root.demo.model.NacinPlacanja;
+import root.demo.repository.CasopisRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +27,9 @@ import java.util.List;
 public class ProcessHelperService {
 
     @Autowired
+    private CasopisRepository casopisRepository;
+
+    @Autowired
     private FormService formService;
 
     @Autowired
@@ -30,6 +37,9 @@ public class ProcessHelperService {
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public HashMap<String, Object> mapListToDto(List<FormSubmissionDto> list) {
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -95,6 +105,57 @@ public class ProcessHelperService {
         }
 
         return new ResponseEntity(this.createListOfTaskDtos(tasks),  HttpStatus.OK);
+    }
+
+    public List<FormSubmissionDto> getMicroservices(String processId){
+        List<FormSubmissionDto> retVal = new ArrayList<>();
+        String naziv = (String)runtimeService.getVariable(processId, "naziv");
+        Casopis casopis = casopisRepository.findByNaziv(naziv);
+        checkMicroservices(casopis,processId);
+        for(NacinPlacanja np : casopis.getNaciniplacanja()){
+            Boolean potvrdjen = (Boolean) runtimeService.getVariable(processId,np.getName());
+            if(potvrdjen == false) {
+                FormSubmissionDto fsd = new FormSubmissionDto();
+                fsd.setFieldId(np.getName());
+                if (np.getName().equals("Paypal")) {
+                    fsd.setFieldValue("https://localhost:5003/seller/" + casopis.getId());
+                } else if (np.getName().equals("Bitcoin")) {
+                    fsd.setFieldValue("https://localhost:5001/seller/" + casopis.getId());
+                } else if (np.getName().equals("Banka")) {
+                    fsd.setFieldValue("https://localhost:5002/seller/" + casopis.getId());
+                }
+                retVal.add(fsd);
+            }
+        }
+        return retVal;
+    }
+
+    public void checkMicroservices(Casopis casopis,String processId){
+        Long id = casopis.getId();
+        List<NacinPlacanja> naciniPlacanja = casopis.getNaciniplacanja();
+        for(NacinPlacanja np : naciniPlacanja){
+            String name = np.getName();
+            RestTemplate rt = restTemplate;
+            boolean result = false;
+
+            try {
+                if (name.equals("Paypal")) {
+                    result = rt.getForObject("https://localhost:8443/paypalservice/seller/get/" + id, boolean.class);
+                } else if (name.equals("Bitcoin")) {
+                    result = rt.getForObject("https://localhost:8443/bitcoinservice/seller/get/" + id, boolean.class);
+                } else if (name.equals("Banka")) {
+                    result = rt.getForObject("https://localhost:8443/bankservice/seller/get/" + id, boolean.class);
+                }
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+
+            if(result == true){
+                runtimeService.setVariable(processId,name,true);
+            }
+        }
+
     }
 }
 

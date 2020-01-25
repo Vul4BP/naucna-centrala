@@ -10,7 +10,7 @@ export class DodavanjeCasopisaService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080/dodavanjecasopisa";
+    this.url = "https://localhost:5005/dodavanjecasopisa";
   }
 
   startProcess(username: String){
@@ -47,5 +47,13 @@ export class DodavanjeCasopisaService {
 
   getDodavanjeCasopisaForm(taskId: string){
     return this.httpClient.get(`${this.url}/get/dodavanjecasopisa/${taskId}`) as Observable<any>
+  }
+
+  getPotvrdaMikroservisa(taskId: string){
+    return this.httpClient.get(`${this.url}/get/potvrdamikroservisa/${taskId}`) as Observable<any>
+  }
+
+  proveraPotvrdjenihMikroservisa(data: any, taskId: String) {
+    return this.httpClient.post(`${this.url}/post/potvrdamikroservisa/${taskId}`, data) as Observable<any>;
   }
 }

@@ -1,0 +1,25 @@
+<h5>Potvrda nacina placanja</h5>
+<div>
+  <table *ngIf="tasks && tasks.length > 0">
+    <tr><th>Ime Taska</th><th colspan="2">Id Taska</th></tr>
+    <tr *ngFor="let task of tasks"><td>{{task.name}}</td><td>{{task.taskId}}</td><td><button (click)="getForm(task.taskId)">Get Form</button></td></tr>
+  </table>
+</div>
+
+<div> 
+  <form #f="ngForm" *ngIf="formFields" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
+    <table>
+      <tr *ngIf="formFields.length > 0"><th colspan="2">Nacini placanja</th></tr>
+      <tr *ngFor="let field of formFields" >
+        <td><label for={{field.fieldId}}>{{field.fieldId}}</label></td>
+        <td><a href={{field.fieldValue}}>{{field.fieldValue}}</a></td>
+      </tr>
+      <tr *ngIf="formFields.length == 0"><td colspan="2"><label>Svi mikroservisi su potvrdjeni, mozete zavrsiti proces dodavanja.</label></td></tr>
+      <tr *ngIf="formFields.length == 0"><td colspan="2"><input type="submit"></td></tr>
+    </table>
+  </form>
+</div>
+<div>
+  <label class="error">{{message}}</label>
+</div>
+

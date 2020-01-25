@@ -10,7 +10,7 @@ export class AuthService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080";
+    this.url = "https://localhost:5005";
    }
 
   login(jwtAuthenticationRequest: any) {
@@ -54,6 +54,22 @@ export class AuthService {
       let retVal = false;
       roles.forEach(role => {   
         if(role['authority'] == "ROLE_UREDNIK"){
+          retVal = true;
+        }
+      });
+
+      return retVal;
+    }else{
+      return false;
+    }
+  }
+
+  isObican(){
+    if(localStorage.getItem("token") != null){
+      let roles = JSON.parse(localStorage.getItem("roles"));
+      let retVal = false;
+      roles.forEach(role => {   
+        if(role['authority'] == "ROLE_OBICAN"){
           retVal = true;
         }
       });

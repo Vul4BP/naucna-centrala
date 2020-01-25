@@ -17,10 +17,13 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { RecenzentProposalComponent } from './recenzent-proposal/recenzent-proposal.component';
 import { TokenInterceptor } from './token.interceptor';
 import { DodavanjeCasopisaComponent } from './dodavanje-casopisa/dodavanje-casopisa.component';
-import { Urednik } from './guard/urendik.guard';
+import { Urednik } from './guard/urednik.guard';
 import { DodavanjeRecIUredComponent } from './dodavanje-rec-i-ured/dodavanje-rec-i-ured.component';
 import { PregledCasopisaComponent } from './pregled-casopisa/pregled-casopisa.component';
 import { EditCasopisComponent } from './edit-casopis/edit-casopis.component';
+import { PotvrdaMikroservisaComponent } from './potvrda-mikroservisa/potvrda-mikroservisa.component';
+import { AllMagazinesComponent } from './all-magazines/all-magazines.component';
+import { Obican } from './guard/obican.guard';
 
 const Routes = [
   {
@@ -72,7 +75,17 @@ const Routes = [
     path: "editcasopis",
     component: EditCasopisComponent,
     canActivate: [Urednik]
-  }
+  },
+  {
+    path: "potvrdinacineplacanja",
+    component: PotvrdaMikroservisaComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "kupicasopise",
+    component: AllMagazinesComponent,
+    canActivate: [Obican]
+  },
 ]
 
 @NgModule({
@@ -86,7 +99,9 @@ const Routes = [
     DodavanjeCasopisaComponent,
     DodavanjeRecIUredComponent,
     PregledCasopisaComponent,
-    EditCasopisComponent
+    EditCasopisComponent,
+    PotvrdaMikroservisaComponent,
+    AllMagazinesComponent
   ],
   imports: [
     BrowserModule,
@@ -101,6 +116,7 @@ const Routes = [
     Authorized,
     Notauthorized,
     Urednik,
+    Obican,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

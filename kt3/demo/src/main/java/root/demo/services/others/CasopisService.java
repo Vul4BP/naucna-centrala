@@ -1,7 +1,9 @@
 package root.demo.services.others;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import root.demo.Dto.CasopisDto;
 import root.demo.Dto.UserDto;
 import root.demo.model.Casopis;
@@ -26,6 +28,9 @@ public class CasopisService implements ICasopisService{
 
     @Autowired
     private UserDbService userDbService;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public boolean validateCasopis(CasopisDto casopisDto) {
@@ -163,6 +168,25 @@ public class CasopisService implements ICasopisService{
     }
 
     @Override
+    public List<CasopisDto> getAllMagazines() {
+        List<Casopis> casopisi = casopisRepository.findAll();
+        List<CasopisDto> casopisiDto = new ArrayList<>();
+        for(Casopis c : casopisi) {
+            CasopisDto casopisDto = ObjectMapperUtils.map(c, CasopisDto.class);
+            casopisDto.setRecenzenti(new ArrayList<>());
+            casopisDto.setUrednici(new ArrayList<>());
+            casopisiDto.add(casopisDto);
+        }
+
+        return casopisiDto;
+    }
+
+    @Override
+    public Casopis getById(Long id) {
+        return casopisRepository.getOne(id);
+    }
+
+    @Override
     public CasopisDto changeStatus(CasopisDto casopisDto) {
         return null;
     }
@@ -251,6 +275,21 @@ public class CasopisService implements ICasopisService{
         }
 
         return casopisDto;
+    }
+
+    public CasopisDto postujSelleru(Casopis casopis){
+        String url = "https://localhost:8443/sellerservice/magazine/add";
+
+        CasopisDto casopisDto = new CasopisDto();
+        casopisDto.setId(casopis.getId());
+        casopisDto.setNaziv(casopis.getNaziv());
+        casopisDto.setIssn(casopis.getIssn());
+        casopisDto.setClanarina(casopis.getClanarina());
+        casopisDto.setNaciniPlacanja(casopis.getNaciniplacanja());
+
+        RestTemplate rt = restTemplate;
+        CasopisDto response = rt.postForObject(url, casopisDto, CasopisDto.class);
+        return response;
     }
 }
 

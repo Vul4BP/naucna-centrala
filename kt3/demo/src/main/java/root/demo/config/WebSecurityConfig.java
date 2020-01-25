@@ -93,7 +93,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/registration/confirm/{processInstanceId}",
                 "/registration/get/status/{processInstanceId}",
                 "/process/tasks/get/{processInstanceId}",
-                "/naucnaoblast/get/all");
+                "/naucnaoblast/get/all",
+                "/dodavanjecasopisa/getjson",
+                "/dodavanjecasopisa/{nacinplacanja}/confirm/{processInstanceId}");
 
     }
 

@@ -10,7 +10,7 @@ export class NacinPlacanjaService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080/nacinplacanja";
+    this.url = "https://localhost:5005/nacinplacanja";
   }
 
   getAll(){

@@ -3,6 +3,7 @@ package root.demo.controller;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import root.demo.Dto.FormSubmissionDto;
 import root.demo.Dto.TaskDto;
 import root.demo.services.others.ProcessHelperService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class DodavanjeCasopisaProcessController {
     @Autowired
     private ProcessHelperService processHelperService;
 
-    private String processName = "dodavanje_casopisa_process";
+    private String processName = "add_new_magazine_process";
 
     //POCINJE PROCES DODAVANJA CASOPISA, VRACA SVA POLJA ZA FORMU ZA DODAVANJE CASOPISA
     @PreAuthorize("hasRole('UREDNIK')")
@@ -141,6 +143,49 @@ public class DodavanjeCasopisaProcessController {
     public @ResponseBody FormFieldsDto getTaskDodavanjeCasopisa(@PathVariable String taskId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         return processHelperService.createFormFieldsDto(task);
+    }
+
+    //VRACA SVA POLJA ZA FORMU ZA POTVRDU MIKROSERVISA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @GetMapping(path = "/get/potvrdamikroservisa/{taskId}", produces = "application/json")
+    public @ResponseBody List<FormSubmissionDto> getTaskPotvrdaMikroservisa(@PathVariable String taskId) {
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processId = task.getProcessInstanceId();
+        FormFieldsDto ffd = processHelperService.createFormFieldsDto(task);
+        return processHelperService.getMicroservices(processId);
+    }
+
+    /*
+    //OVO SLUZI DA SE POTVRDI MIKROSERVIS
+    @GetMapping(path = "/{nacinplacanja}/confirm/{processInstanceId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> confirmNacinPlacanja(@PathVariable String nacinplacanja, @PathVariable String processInstanceId) {
+        runtimeService.setVariable(processInstanceId,nacinplacanja,true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }*/
+
+    //VRACAJU SE PODACI SA FORME ZA DODAVANJE UREDNIKA I RECENZENATA
+    @PreAuthorize("hasRole('UREDNIK')")
+    @PostMapping(path = "/post/potvrdamikroservisa/{taskId}", produces = "application/json")
+    public @ResponseBody ResponseEntity postFormDataPotvrdaMikroservisa(@RequestBody List<FormSubmissionDto> dto, @PathVariable String taskId) {
+        System.out.println("FORMA ZA POTVRDU MIKROSERVISA JE DODATA");
+        HashMap<String, Object> map = processHelperService.mapListToDto(dto);
+
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+
+        if(processHelperService.getMicroservices(processInstanceId).size() > 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        formService.submitTaskForm(taskId, map);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //TEST CERT
+    @GetMapping(path = "/getjson", produces = "application/json")
+    public ResponseEntity<?> GetJson(){
+        String s = "\"res\" : \"ok\"";
+        return new ResponseEntity<>(s,HttpStatus.OK);
     }
 
 

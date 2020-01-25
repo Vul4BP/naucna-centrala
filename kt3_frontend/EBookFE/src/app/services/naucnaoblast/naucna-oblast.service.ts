@@ -10,7 +10,7 @@ export class NaucnaOblastService {
   private url: String;
 
   constructor(private httpClient: HttpClient) {
-    this.url = "http://localhost:8080/naucnaoblast";
+    this.url = "https://localhost:5005/naucnaoblast";
   }
 
   getAll(){

@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import root.demo.Dto.CasopisDto;
-import root.demo.model.NaucnaOblast;
-import root.demo.repository.NaucnaOblastRepository;
+import root.demo.model.Casopis;
 import root.demo.services.others.CasopisService;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class CasopisController {
     private TaskService taskService;
 
     @GetMapping(path = "/get/{taskId}", produces = "application/json")
-    public @ResponseBody ResponseEntity<CasopisDto> getByTaskId(@PathVariable String taskId) {
+    public @ResponseBody ResponseEntity<CasopisDto> getMagazine(@PathVariable String taskId) {
 
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         String processInstanceId = task.getProcessInstanceId();
@@ -43,6 +42,26 @@ public class CasopisController {
         }
 
         return new ResponseEntity(casopisDto,  HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/get/all", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<CasopisDto>> getAllMagazines() {
+        List<CasopisDto> casopisiDto = casopisService.getAllMagazines();
+        return new ResponseEntity(casopisiDto,  HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/kupi/{id}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> kupiCasopis(@PathVariable Long id) {
+        Casopis casopis = casopisService.getById(id);
+        if(casopis == null){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        String redirectUrl = "https://localhost:5000/magazine?id=" + casopis.getId();
+        //return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectUrl).build();
+
+        String body = "{ \"redirectUrl\" : \"" + redirectUrl + "\" }";
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
 }

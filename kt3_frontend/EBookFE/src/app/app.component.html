@@ -12,6 +12,10 @@
   <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjecasopisa']" >Dodavanje casopisa</a></li>
   <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjereciured']" >Dodavanje recenzenata i urednika u casopis</a></li>
   <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/editcasopis']" >Zahtevi za izmenu casopisa</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/potvrdinacineplacanja']" >Potvrda nacina placanja</a></li>
+
+  <!--OBICAN-->
+  <li *ngIf="authService.isLoggedIn() && authService.isObican()" ><a [routerLink]="['/kupicasopise']" >Kupi casopis</a></li>
 
   <!--SVI-ULOGOVANI-->
   <li *ngIf="authService.isLoggedIn() == true" ><a [routerLink]="['/userprofile']" >Profil</a></li> 

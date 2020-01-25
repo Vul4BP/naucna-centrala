@@ -1,6 +1,7 @@
 package root.demo.services.others;
 
 import root.demo.Dto.CasopisDto;
+import root.demo.model.Casopis;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface ICasopisService {
     public CasopisDto getByNaziv(String naziv);
     public boolean validateEditovanjeCasopis(CasopisDto casopisDto);
     public abstract CasopisDto editCasopis(CasopisDto casopisDto);
+    public List<CasopisDto> getAllMagazines();
+    public Casopis getById(Long id);
 }
