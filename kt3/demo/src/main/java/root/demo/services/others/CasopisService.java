@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import root.demo.Dto.CasopisDto;
+import root.demo.Dto.ItemDto;
+import root.demo.Dto.SellerDto;
 import root.demo.Dto.UserDto;
 import root.demo.model.Casopis;
 import root.demo.model.UserDb;
@@ -19,6 +21,7 @@ import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class CasopisService implements ICasopisService{
@@ -172,10 +175,12 @@ public class CasopisService implements ICasopisService{
         List<Casopis> casopisi = casopisRepository.findAll();
         List<CasopisDto> casopisiDto = new ArrayList<>();
         for(Casopis c : casopisi) {
-            CasopisDto casopisDto = ObjectMapperUtils.map(c, CasopisDto.class);
-            casopisDto.setRecenzenti(new ArrayList<>());
-            casopisDto.setUrednici(new ArrayList<>());
-            casopisiDto.add(casopisDto);
+            if(c.isEnabled()){
+                CasopisDto casopisDto = ObjectMapperUtils.map(c, CasopisDto.class);
+                casopisDto.setRecenzenti(new ArrayList<>());
+                casopisDto.setUrednici(new ArrayList<>());
+                casopisiDto.add(casopisDto);
+            }
         }
 
         return casopisiDto;
@@ -277,6 +282,39 @@ public class CasopisService implements ICasopisService{
         return casopisDto;
     }
 
+    public SellerDto postujSellera(Casopis casopis){
+        String url = "https://localhost:8443/sellerservice/seller/add";
+
+        SellerDto dto = new SellerDto();
+        dto.setEmail(casopis.getUrednici().get(0).getEmail()); //email urednika
+        dto.setGeneratedId(generateId());
+        dto.setNaciniPlacanja(casopis.getNaciniplacanja());
+
+        RestTemplate rt = restTemplate;
+        SellerDto response = rt.postForObject(url, dto, SellerDto.class);
+        return response;
+    }
+
+    public ItemDto postujItem(Casopis casopis){
+        String url = "https://localhost:8443/sellerservice/item/add";
+
+        ItemDto dto = new ItemDto();
+        dto.setAmount(casopis.getClanarina());
+        dto.setName(casopis.getNaziv());
+        dto.setSellerEmail(casopis.getUrednici().get(0).getEmail());
+        dto.setGeneratedId(casopis.getId().toString());
+        //dto.setIzdanje();
+
+        RestTemplate rt = restTemplate;
+        ItemDto response = rt.postForObject(url, dto, ItemDto.class);
+        return response;
+    }
+
+    private String generateId() {
+        return String.valueOf(System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(10, 99));
+    }
+
+    /*
     public CasopisDto postujSelleru(Casopis casopis){
         String url = "https://localhost:8443/sellerservice/magazine/add";
 
@@ -290,6 +328,6 @@ public class CasopisService implements ICasopisService{
         RestTemplate rt = restTemplate;
         CasopisDto response = rt.postForObject(url, casopisDto, CasopisDto.class);
         return response;
-    }
+    }*/
 }
 

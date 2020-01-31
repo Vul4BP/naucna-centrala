@@ -4,6 +4,8 @@ import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import root.demo.Dto.ItemDto;
+import root.demo.Dto.SellerDto;
 import root.demo.model.Casopis;
 import root.demo.repository.CasopisRepository;
 import root.demo.services.others.CasopisService;
@@ -23,8 +25,10 @@ public class AktiviranjeCasopisaService implements JavaDelegate {
         System.out.println("AKTIVIRANJE CASOPISA SERVICE");
         String name = (String) execution.getVariable("naziv");
         Casopis casopis = casopisRepository.findByNaziv(name);
+
         if(casopis != null){
-            if(casopisService.postujSelleru(casopis) != null){
+            ItemDto dto = casopisService.postujItem(casopis);
+            if(dto != null) {
                 casopis.setEnabled(true);
                 execution.setVariable("aktivan", true);
                 System.out.println("STATUS CASOPISA JE PREBACEN U AKTIVAN");

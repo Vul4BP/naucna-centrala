@@ -24,4 +24,8 @@ export class CasopisService {
   kupiCasopis(id: Number){
     return this.httpClient.get(`${this.url}/kupi/${id}`) as Observable<any>
   }
+
+  subscribeCasopis(id: Number){
+    return this.httpClient.get(`${this.url}/subscribe/${id}`) as Observable<any>
+  }
 }

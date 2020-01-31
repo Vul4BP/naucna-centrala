@@ -114,15 +114,17 @@ public class ProcessHelperService {
         checkMicroservices(casopis,processId);
         for(NacinPlacanja np : casopis.getNaciniplacanja()){
             Boolean potvrdjen = (Boolean) runtimeService.getVariable(processId,np.getName());
+            String generatedId = (String) runtimeService.getVariable(processId,"generatedId");
+
             if(potvrdjen == false) {
                 FormSubmissionDto fsd = new FormSubmissionDto();
                 fsd.setFieldId(np.getName());
                 if (np.getName().equals("Paypal")) {
-                    fsd.setFieldValue("https://localhost:5003/seller/" + casopis.getId());
+                    fsd.setFieldValue("https://localhost:5003/seller/" + generatedId);
                 } else if (np.getName().equals("Bitcoin")) {
-                    fsd.setFieldValue("https://localhost:5001/seller/" + casopis.getId());
+                    fsd.setFieldValue("https://localhost:5001/seller/" + generatedId);
                 } else if (np.getName().equals("Banka")) {
-                    fsd.setFieldValue("https://localhost:5002/seller/" + casopis.getId());
+                    fsd.setFieldValue("https://localhost:5002/seller/" + generatedId);
                 }
                 retVal.add(fsd);
             }
@@ -137,14 +139,14 @@ public class ProcessHelperService {
             String name = np.getName();
             RestTemplate rt = restTemplate;
             boolean result = false;
-
+            String email = casopis.getUrednici().get(0).getEmail();
             try {
-                if (name.equals("Paypal")) {
-                    result = rt.getForObject("https://localhost:8443/paypalservice/seller/get/" + id, boolean.class);
-                } else if (name.equals("Bitcoin")) {
-                    result = rt.getForObject("https://localhost:8443/bitcoinservice/seller/get/" + id, boolean.class);
-                } else if (name.equals("Banka")) {
-                    result = rt.getForObject("https://localhost:8443/bankservice/seller/get/" + id, boolean.class);
+                if (name.toLowerCase().equals("paypal")) {
+                    result = rt.getForObject("https://localhost:8443/paypalservice/seller/get/" + email, boolean.class);
+                } else if (name.toLowerCase().equals("bitcoin")) {
+                    result = rt.getForObject("https://localhost:8443/bitcoinservice/seller/get/" + email, boolean.class);
+                } else if (name.toLowerCase().equals("banka")) {
+                    result = rt.getForObject("https://localhost:8443/bankservice/seller/get/" + email, boolean.class);
                 }
             }
             catch (Exception e){

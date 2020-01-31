@@ -1,9 +1,12 @@
 <h5>Kupovina casopisa</h5>
 <table>
-  <tr><th>Naziv</th><th>Cena</th><th></th></tr>
+  <tr><th>Naziv</th><th>Cena</th><th>Valuta</th><th>Kupovina</th><th>Pretplata</th></tr>
   <tr *ngFor="let field of allMagazines" >
     <td><label for={{field.naziv}}>{{field.naziv}}</label></td>
-    <td><label for={{field.clanarina}}>{{field.clanarina}} USD</label></td>
+    <td><label for={{field.clanarina}}>{{field.clanarina}}</label></td>
+    <td><label>USD</label></td>
     <td><button (click)="kupiCasopis(field.id)">Kupi</button></td>
+    <td *ngIf="checkIfPaypal(field.id) == true"><button (click)="subscribeCasopis(field.id)">Pretplati</button></td>
+    <td *ngIf="checkIfPaypal(field.id) == false"><label>Nema paypal</label></td>
   </tr>
 </table>

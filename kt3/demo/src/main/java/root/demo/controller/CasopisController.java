@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import root.demo.Dto.CasopisDto;
 import root.demo.model.Casopis;
+import root.demo.model.NacinPlacanja;
 import root.demo.services.others.CasopisService;
 
 import java.util.List;
@@ -58,6 +59,33 @@ public class CasopisController {
         }
 
         String redirectUrl = "https://localhost:5000/magazine?id=" + casopis.getId();
+        //return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectUrl).build();
+
+        String body = "{ \"redirectUrl\" : \"" + redirectUrl + "\" }";
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/subscribe/{id}", produces = "application/json")
+    public @ResponseBody ResponseEntity<?> subscribeCasopis(@PathVariable Long id) {
+        Casopis casopis = casopisService.getById(id);
+        if(casopis == null){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }else{
+            boolean indikator = false;
+            List<NacinPlacanja> nacinPlacanja = casopis.getNaciniplacanja();
+            for(NacinPlacanja nc : nacinPlacanja){
+                if(nc.getName().toLowerCase().equals("paypal")){
+                    indikator = true;
+                }
+            }
+
+            if(indikator == false){
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        //treba se obratiti KP da se dobije url od pp fronta
+        String redirectUrl = "https://localhost:5003/subscription/" + casopis.getId();
         //return ResponseEntity.status(HttpStatus.FOUND).header("Location", redirectUrl).build();
 
         String body = "{ \"redirectUrl\" : \"" + redirectUrl + "\" }";

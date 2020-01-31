@@ -37,4 +37,26 @@ export class AllMagazinesComponent implements OnInit {
       })
   }
 
+  checkIfPaypal(id : Number) : boolean{
+    let res = false;
+    let magazine = this.allMagazines.find(x => x.id == id);
+    if(magazine != null && magazine.naciniPlacanja.find(x => x.name == "Paypal") != null){
+      res = true;
+    }
+    return res;
+  }
+
+  subscribeCasopis(id : Number){
+    //console.log(id);
+    this.casopisService.subscribeCasopis(id)
+    .subscribe(
+      data => {
+        console.log(data);
+        window.location.replace(data['redirectUrl']);
+      },
+      error => {
+        console.log("Error");
+      })
+  }
+
 }
