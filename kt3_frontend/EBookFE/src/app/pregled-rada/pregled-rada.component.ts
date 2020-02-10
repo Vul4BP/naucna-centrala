@@ -73,13 +73,19 @@ export class PregledRadaComponent implements OnInit {
     }  
     console.log(o);
     
+    this.message = "";
     let x = this.obradaService.postPregledanjeRadovaForm(o, this.formFieldsDto.taskId);
     x.subscribe(
       res => {
         this.tasks = [];
-        this.getTasks();
+        //this.getTasks();
         this.formFields = [];
-        this.router.navigate(['/pregledpdfa', this.processInstance]);
+        if(this.relevantan == true){
+          this.router.navigate(['/pregledpdfa', this.processInstance]);
+        }else{
+          this.getTasks();
+          this.message = "Uspesno ste pregledali rad. Rad je odbijen.";
+        }
       },
       err => {
         console.log("Error occured");

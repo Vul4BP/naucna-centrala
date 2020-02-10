@@ -7,20 +7,19 @@ import org.springframework.stereotype.Service;
 import root.demo.services.others.EmailService;
 
 @Service
-public class MejlZaKorekciju implements JavaDelegate {
+public class MejlZaRecenzenta implements JavaDelegate {
     @Autowired
     private EmailService emailService;
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        System.out.println("SALJI MEJL DA RAD TREBA DA SE KORIGUJE SERVICE");
-        String autor_email = (String) execution.getVariable("email_autora");
+        System.out.println("SALJI MEJL RECENZENTU ZA RECENZIJU RADA SERVICE");
+        String recenzent_email = (String) execution.getVariable("recenzentId");
 
         String message = "Hello!\n";
-        message += "Article needs to be changed.\n";
+        message += "Article needs to be checked.\n";
+        //emailService.sendMail(recenzent_email, "CHECK ARTICLE", message);
 
-        //emailService.sendMail(autor_email, "CHANGE ARTICLE", message);
-
-        System.out.println("--Poslato na " + autor_email);
+        System.out.println("--Poslato na " + recenzent_email);
     }
 }

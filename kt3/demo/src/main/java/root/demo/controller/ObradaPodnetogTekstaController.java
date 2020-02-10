@@ -89,7 +89,7 @@ public class ObradaPodnetogTekstaController {
     @Autowired
     AuthorizationService authorizationService;
 
-    private String processName = "proces_dodavanja_novog_rada_u_casopis";
+    private String processName = "add_new_article_ver1";
 
     //AUTORIZACIJA PROCESA
 
@@ -465,7 +465,7 @@ public class ObradaPodnetogTekstaController {
                 allRec.add(casopis.getUrednici().get(0).getUsername());
             }else{
                 for(String username : recenzenti){
-                    System.out.println("--Recenzija rada task kreiran za " + username);
+                    //System.out.println("--Recenzija rada task kreiran za " + username);
                     lista_izabranih_recenzenata.add(username);    //username recenzenata se dodaje u listu
                 }
 

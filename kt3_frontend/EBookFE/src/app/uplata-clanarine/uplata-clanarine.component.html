@@ -1,7 +1,7 @@
 <h5>Uplata clanarine</h5>
 <table>
   <tr><th>Naziv</th><th>Cena</th><th>Valuta</th><th>Pretplata</th></tr>
-  <tr>
+  <tr *ngIf="casopis.id">
     <td><label for={{casopis.naziv}}>{{casopis.naziv}}</label></td>
     <td><label for={{casopis.clanarina}}>{{casopis.clanarina}}</label></td>
     <td><label>USD</label></td>

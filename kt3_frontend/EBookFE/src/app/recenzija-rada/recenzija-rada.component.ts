@@ -77,8 +77,14 @@ export class RecenzijaRadaComponent implements OnInit {
   onSubmit(value, form){
     let o = new Array();
     for (var property in value) {
-      o.push({fieldId : property, fieldValue : value[property]});
+      if(property == "komentar_za_autora" || property == "komentar_za_urednika"){
+        let val = this.username + " - " + value[property]; 
+        o.push({fieldId : property, fieldValue : val});
+      }else{
+        o.push({fieldId : property, fieldValue : value[property]});
+      }
     }  
+
     console.log(o);
 
     if(o.find(x => x.fieldId == "preporuka" && x.fieldValue == "")){

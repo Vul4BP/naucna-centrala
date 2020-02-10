@@ -70,6 +70,7 @@ export class PodaciORaduComponent implements OnInit {
    }
 
    addKoautor(value, form){
+    this.message = "";
     let o = {}
     for (var property in value) {
       if(property == "ime_koautora"){
@@ -92,6 +93,7 @@ export class PodaciORaduComponent implements OnInit {
     console.log(o);
     if(o["ime"] == "" || o["email"] == "" || o["grad"] == "" || o["drzava"] == ""){
       console.log("Morate popunite sve podatke o koautoru");
+      this.message = "Morate popuniti sve podatke o koautoru";
       return;
     }
     this.koautori.push(o);
@@ -107,12 +109,14 @@ export class PodaciORaduComponent implements OnInit {
     o.push({fieldId : "koautori", fieldValue : this.koautori});
     console.log(o);
 
+    this.message = "";
+
     let x = this.obradaService.postFile(o, this.fileToUpload, this.formFieldsDto.taskId);
     x.subscribe(
       res => {
         console.log(res);
         this.formFields = null;
-        this.message = "Uspesno ste podneli zahtev za dodavanje rada. Urednik treba da ga proveri.";
+        this.message = "Uspesno ste podneli zahtev za dodavanje rada.";
       },
       err => {
         console.log("Error occured");

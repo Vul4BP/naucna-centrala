@@ -91,6 +91,12 @@ export class PregledPdfComponent implements OnInit {
       o.push({fieldId : property, fieldValue : value[property]});
     }  
     console.log(o);
+
+    this.message = "";
+    if(o.find(x => x.fieldId == "komentar" && x.fieldValue == "" && this.formatiran == false)){
+      this.message = "Morate uneti komentar";
+      return;
+    }
     
     let x = this.obradaService.postPregledanjePdfaForm(o, this.formFieldsDto.taskId);
     x.subscribe(
