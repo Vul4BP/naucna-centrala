@@ -39,7 +39,7 @@ public class DodavanjeCasopisaProcessController {
     @Autowired
     private ProcessHelperService processHelperService;
 
-    private String processName = "add_new_magazine_process";
+    private String processName = "add_new_magazine_process_1";
 
     //POCINJE PROCES DODAVANJA CASOPISA, VRACA SVA POLJA ZA FORMU ZA DODAVANJE CASOPISA
     @PreAuthorize("hasRole('UREDNIK')")

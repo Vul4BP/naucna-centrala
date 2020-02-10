@@ -1,0 +1,27 @@
+<h5>Podaci o radu</h5>
+<div *ngIf="formFields && formFields.length > 0"> 
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate> 
+    <table>
+      <tr>
+        <td><label for="file">PDF:</label></td>
+        <td><input type="file" id="file" name="file" (change)="handleFileInput($event.target.files)"></td>
+      </tr>
+      <tr *ngFor="let field of formFields">
+          <td><label for={{field.id}}>{{field.label}}</label></td>
+          <td *ngIf="field.type.name=='boolean'"><input type="checkbox" name={{field.id}} ngModel></td>
+          <td *ngIf="field.type.name=='string'"><input type="text" name={{field.id}} ngModel></td>
+          <td *ngIf="field.type.name=='long'"><input type="number" name={{field.id}} ngModel></td>
+          <td *ngIf="field.type.name=='enum'"><select name={{field.id}} ngModel>
+            <option *ngFor="let val of enumValues[field.id]" value={{val}}>
+              {{field.type.values[val]}}
+            </option>
+          </select></td>
+      </tr>
+      <tr><td colspan="2"><button type="button" (click)="addKoautor(f.value, f)">Dodaj Koautora</button></td></tr> 
+      <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+  </form>
+</div>
+<div>
+  <label class="error">{{message}}</label>
+</div>

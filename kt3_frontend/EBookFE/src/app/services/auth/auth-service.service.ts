@@ -80,6 +80,38 @@ export class AuthService {
     }
   }
 
+  isRecenzent(){
+    if(localStorage.getItem("token") != null){
+      let roles = JSON.parse(localStorage.getItem("roles"));
+      let retVal = false;
+      roles.forEach(role => {   
+        if(role['authority'] == "ROLE_RECENZENT"){
+          retVal = true;
+        }
+      });
+
+      return retVal;
+    }else{
+      return false;
+    }
+  }
+
+  isAutor(){
+    if(localStorage.getItem("token") != null){
+      let roles = JSON.parse(localStorage.getItem("roles"));
+      let retVal = false;
+      roles.forEach(role => {   
+        if(role['authority'] == "ROLE_AUTOR"){
+          retVal = true;
+        }
+      });
+
+      return retVal;
+    }else{
+      return false;
+    }
+  }
+
   getToken(): any{
     return localStorage.getItem('token');
   }

@@ -37,6 +37,9 @@ public class CasopisController {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         String processInstanceId = task.getProcessInstanceId();
         String name = (String) runtimeService.getVariable(processInstanceId, "naziv");
+        if(name == null){
+            name = (String) runtimeService.getVariable(processInstanceId, "selImeCasopisa");
+        }
         CasopisDto casopisDto = casopisService.getByNaziv(name);
         if(casopisDto == null){
             return new ResponseEntity(new CasopisDto(),  HttpStatus.BAD_REQUEST);
@@ -91,5 +94,4 @@ public class CasopisController {
         String body = "{ \"redirectUrl\" : \"" + redirectUrl + "\" }";
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
-
 }

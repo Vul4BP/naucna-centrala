@@ -4,6 +4,7 @@ import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
+import org.camunda.bpm.engine.form.FormFieldValidationConstraint;
 import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
@@ -54,7 +55,8 @@ public class ProcessHelperService {
         TaskFormData tfd = formService.getTaskFormData(task.getId());
         List<FormField> properties = tfd.getFormFields();
         for(FormField fp : properties) {
-            System.out.println("ID: " + fp.getId() + "\tTYPE: " + fp.getType());
+            //List<FormFieldValidationConstraint> val = fp.getValidationConstraints();
+            //System.out.println("ID: " + fp.getId() + "\tTYPE: " + fp.getType());
         }
 
         String processInstanceId = task.getProcessInstanceId();
@@ -107,6 +109,24 @@ public class ProcessHelperService {
         return new ResponseEntity(this.createListOfTaskDtos(tasks),  HttpStatus.OK);
     }
 
+    public ResponseEntity<List<TaskDto>> getMultipleActiveTasksByName(String username, String processName, String taskName){
+        List<ProcessInstance> processInstances = runtimeService.createProcessInstanceQuery()
+                .processDefinitionKey(processName)
+                .active()
+                .list();
+
+        List<Task> tasks = new ArrayList<Task>();
+
+        for(ProcessInstance pi : processInstances){
+            List<Task> listOfTasks = taskService.createTaskQuery().processInstanceId(pi.getId()).taskAssignee(username).taskName(taskName).list();
+            if(listOfTasks != null) {
+                tasks.addAll(listOfTasks);
+            }
+        }
+
+        return new ResponseEntity(this.createListOfTaskDtos(tasks),  HttpStatus.OK);
+    }
+
     public List<FormSubmissionDto> getMicroservices(String processId){
         List<FormSubmissionDto> retVal = new ArrayList<>();
         String naziv = (String)runtimeService.getVariable(processId, "naziv");
@@ -142,11 +162,23 @@ public class ProcessHelperService {
             String email = casopis.getUrednici().get(0).getEmail();
             try {
                 if (name.toLowerCase().equals("paypal")) {
-                    result = rt.getForObject("https://localhost:8443/paypalservice/seller/get/" + email, boolean.class);
+                    try {
+                        result = rt.getForObject("https://localhost:8443/paypalservice/seller/get/" + email, boolean.class);
+                    }catch (Exception e){
+                        //System.out.println(e.getMessage());
+                    }
                 } else if (name.toLowerCase().equals("bitcoin")) {
-                    result = rt.getForObject("https://localhost:8443/bitcoinservice/seller/get/" + email, boolean.class);
+                    try {
+                        result = rt.getForObject("https://localhost:8443/bitcoinservice/seller/get/" + email, boolean.class);
+                    }catch (Exception e){
+                        //System.out.println(e.getMessage());
+                    }
                 } else if (name.toLowerCase().equals("banka")) {
-                    result = rt.getForObject("https://localhost:8443/bankservice/seller/get/" + email, boolean.class);
+                    try {
+                        result = rt.getForObject("https://localhost:8443/bankservice/seller/get/" + email, boolean.class);
+                    }catch (Exception e){
+                        //System.out.println(e.getMessage());
+                    }
                 }
             }
             catch (Exception e){

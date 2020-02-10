@@ -3,7 +3,9 @@ package root.demo.Dto;
 import lombok.Data;
 import root.demo.model.NacinPlacanja;
 import root.demo.model.NaucnaOblast;
+import root.demo.model.Rad;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -18,4 +20,5 @@ public class CasopisDto {
     private List<UserDto> urednici;
     private List<UserDto> recenzenti;
     private List<NacinPlacanja> naciniPlacanja;
+    private List<Rad> radovi;
 }

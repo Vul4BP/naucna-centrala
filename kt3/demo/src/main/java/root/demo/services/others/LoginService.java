@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import root.demo.Dto.UserDto;
+import root.demo.config.MyConfig;
 import root.demo.model.Authority;
 import root.demo.model.UserDb;
 import root.demo.repository.AuthorityRepository;
@@ -75,7 +76,7 @@ public class LoginService implements ILoginService{
         }
         userDb.setEmail(userDto.getEmail());
         userDb.setGrad(userDto.getGrad());
-        userDb.setNaucneoblasti(userDto.getOblasti());
+        userDb.setNaucneoblasti(userDto.getNaucneoblasti());
 
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
@@ -128,7 +129,7 @@ public class LoginService implements ILoginService{
             user.setTitula(userDto.getTitula());
         }
 
-        user.setNaucneoblasti(userDto.getOblasti());
+        user.setNaucneoblasti(userDto.getNaucneoblasti());
 
         Authority authority = authorityRepository.findOneByName(role);
         List<Authority> authorities = new ArrayList<>();
@@ -144,6 +145,11 @@ public class LoginService implements ILoginService{
 
         identityService.saveUser(cam_user);
         user = userDbRepository.save(user);
+
+        //ovo sluzi za dodavanje autora prilikom registracije
+        if(role.equals(MyConfig.roleAutor) == true) {
+            identityService.createMembership(user.getUsername(), MyConfig.groupAutor);
+        }
 
         return userDto;
     }

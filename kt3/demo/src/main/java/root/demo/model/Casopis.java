@@ -69,4 +69,16 @@ public class Casopis {
     @NotNull(message = "NacinPlacanja can't be null")
     @Size(min = 1, message = "At least one NacinPlacanja is needed")
     private List<NacinPlacanja> naciniplacanja;
+
+    @ManyToMany()
+    @JoinTable(name = "casopis_aktivnaclanarina",
+            joinColumns = @JoinColumn(name = "casopis_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+    private List<UserDb> korisniciSaAktivnomClanarinom;
+
+    @ManyToMany()
+    @JoinTable(name = "casopis_rad",
+            joinColumns = @JoinColumn(name = "casopis_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "rad_id", referencedColumnName = "id"))
+    private List<Rad> radovi;
 }

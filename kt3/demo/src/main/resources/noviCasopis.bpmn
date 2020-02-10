@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1t3pxvj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
-  <bpmn:process id="add_new_magazine_process" name="Novi Casopis" isExecutable="true">
+  <bpmn:process id="add_new_magazine_process_1" name="Novi Casopis" isExecutable="true">
     <bpmn:extensionElements>
       <camunda:executionListener class="root.demo.handlers.DodavanjeCasopisaProcessHandler" event="start" />
     </bpmn:extensionElements>
@@ -135,7 +135,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0tl1qgf" sourceRef="Task_0nvzvry" targetRef="Task_0dkbs22" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="add_new_magazine_process">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="add_new_magazine_process_1">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="192" y="269" width="36" height="36" />
       </bpmndi:BPMNShape>

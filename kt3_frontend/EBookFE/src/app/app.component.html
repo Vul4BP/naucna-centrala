@@ -9,13 +9,26 @@
   <li *ngIf="authService.isLoggedIn() && authService.isAdmin()" ><a [routerLink]="['/casopisi']" >Zahtevi za pregled casopisa</a></li>
 
   <!--UREDNIK-->
-  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjecasopisa']" >Dodavanje casopisa</a></li>
-  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjereciured']" >Dodavanje recenzenata i urednika u casopis</a></li>
-  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/editcasopis']" >Zahtevi za izmenu casopisa</a></li>
-  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/potvrdinacineplacanja']" >Potvrda nacina placanja</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjecasopisa']" >Dodaj casopis</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/dodavanjereciured']" >Dodaj recenzente i urednike u casopis</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/editcasopis']" >Izmeni casopis</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/potvrdinacineplacanja']" >Potvrdi nacin placanja</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/pregledrada']" >Pregledaj rad</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/biranjerecenzenatarada']" >Izaberi recenzente rada</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/izbornovogrecenzenta']" >Zameni recenzenta rada</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/citanjekomentara']" >Komentari recenzenata</a></li>
+  <li *ngIf="authService.isLoggedIn() && authService.isUrednik()" ><a [routerLink]="['/zahtevirecenzenatavalidni']" >Pregled izmena rada</a></li>
 
   <!--OBICAN-->
   <li *ngIf="authService.isLoggedIn() && authService.isObican()" ><a [routerLink]="['/kupicasopise']" >Kupi casopis</a></li>
+
+   <!--AUTOR-->
+   <li *ngIf="authService.isLoggedIn() && authService.isAutor()" ><a [routerLink]="['/obradapodnetogteksta']" >Obrada podnetog teksta</a></li>
+   <li *ngIf="authService.isLoggedIn() && authService.isAutor()" ><a [routerLink]="['/korekcijarada']" >Korekcija radova</a></li>
+   <li *ngIf="authService.isLoggedIn() && authService.isAutor()" ><a [routerLink]="['/ispravkarada']" >Ispravka radova</a></li>
+
+  <!--RECENZENT-->
+  <li *ngIf="authService.isLoggedIn() && authService.isRecenzent()" ><a [routerLink]="['/recenzijarada']" >Zahtevi za recenziju rada</a></li>
 
   <!--SVI-ULOGOVANI-->
   <li *ngIf="authService.isLoggedIn() == true" ><a [routerLink]="['/userprofile']" >Profil</a></li> 

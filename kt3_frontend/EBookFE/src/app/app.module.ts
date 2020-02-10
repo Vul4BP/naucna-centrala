@@ -24,6 +24,22 @@ import { EditCasopisComponent } from './edit-casopis/edit-casopis.component';
 import { PotvrdaMikroservisaComponent } from './potvrda-mikroservisa/potvrda-mikroservisa.component';
 import { AllMagazinesComponent } from './all-magazines/all-magazines.component';
 import { Obican } from './guard/obican.guard';
+import { Autor } from './guard/autor.guard';
+import { ObradaPodnetogTekstaComponent } from './obrada-podnetog-teksta/obrada-podnetog-teksta.component';
+import { UplataClanarineComponent } from './uplata-clanarine/uplata-clanarine.component';
+import { ConfirmSubComponent } from './confirm-sub/confirm-sub.component';
+import { PodaciORaduComponent } from './podaci-o-radu/podaci-o-radu.component';
+import { PregledRadaComponent } from './pregled-rada/pregled-rada.component';
+import { PregledPdfComponent } from './pregled-pdf/pregled-pdf.component';
+import { KorekcijaRadaComponent } from './korekcija-rada/korekcija-rada.component';
+import { IzborRecenzenataRadaComponent } from './izbor-recenzenata-rada/izbor-recenzenata-rada.component';
+import { RecenzijaRadaComponent } from './recenzija-rada/recenzija-rada.component';
+import { Recenzent } from './guard/recenzent.guard';
+import { IzborNovogRecenzentaComponent } from './izbor-novog-recenzenta/izbor-novog-recenzenta.component';
+import { CitanjeKomentaraComponent } from './citanje-komentara/citanje-komentara.component';
+import { IspravkaRadaComponent } from './ispravka-rada/ispravka-rada.component';
+import { AuthService } from './services/auth/auth-service.service';
+import { ZahteviRecenzenataIspostovaniComponent } from './zahtevi-recenzenata-ispostovani/zahtevi-recenzenata-ispostovani.component';
 
 const Routes = [
   {
@@ -86,6 +102,71 @@ const Routes = [
     component: AllMagazinesComponent,
     canActivate: [Obican]
   },
+  {
+    path: "obradapodnetogteksta",
+    component: ObradaPodnetogTekstaComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "uplataclanarine/:id",
+    component: UplataClanarineComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "confirmsub/:status",
+    component: ConfirmSubComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "podacioradu/:id",
+    component: PodaciORaduComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "pregledrada",
+    component: PregledRadaComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "pregledpdfa/:id",
+    component: PregledPdfComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "korekcijarada",
+    component: KorekcijaRadaComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "biranjerecenzenatarada",
+    component: IzborRecenzenataRadaComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "recenzijarada",
+    component: RecenzijaRadaComponent,
+    canActivate: [Recenzent]
+  },
+  {
+    path: "izbornovogrecenzenta",
+    component: IzborNovogRecenzentaComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "citanjekomentara",
+    component: CitanjeKomentaraComponent,
+    canActivate: [Urednik]
+  },
+  {
+    path: "ispravkarada",
+    component: IspravkaRadaComponent,
+    canActivate: [Autor]
+  },
+  {
+    path: "zahtevirecenzenatavalidni",
+    component: ZahteviRecenzenataIspostovaniComponent,
+    canActivate: [Urednik]
+  }
 ]
 
 @NgModule({
@@ -101,7 +182,20 @@ const Routes = [
     PregledCasopisaComponent,
     EditCasopisComponent,
     PotvrdaMikroservisaComponent,
-    AllMagazinesComponent
+    AllMagazinesComponent,
+    ObradaPodnetogTekstaComponent,
+    UplataClanarineComponent,
+    ConfirmSubComponent,
+    PodaciORaduComponent,
+    PregledRadaComponent,
+    PregledPdfComponent,
+    KorekcijaRadaComponent,
+    IzborRecenzenataRadaComponent,
+    RecenzijaRadaComponent,
+    IzborNovogRecenzentaComponent,
+    CitanjeKomentaraComponent,
+    IspravkaRadaComponent,
+    ZahteviRecenzenataIspostovaniComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +211,8 @@ const Routes = [
     Notauthorized,
     Urednik,
     Obican,
+    Autor,
+    Recenzent,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

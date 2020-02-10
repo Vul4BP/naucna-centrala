@@ -8,4 +8,5 @@ import root.demo.model.UserDb;
 public interface UserDbRepository extends JpaRepository<UserDb, Long> {
     UserDb findByUsername(String username);
     UserDb findByEmail(String email);
+    UserDb findByImeAndEmail(String ime, String email);
 }

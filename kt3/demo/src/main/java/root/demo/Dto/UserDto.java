@@ -17,7 +17,7 @@ public class UserDto {
     private String email;
     private String titula;
     private String token;
-    private List<NaucnaOblast> oblasti;
+    private List<NaucnaOblast> naucneoblasti;
     private List<Authority> authorities;
     private int expiresIn;
 }

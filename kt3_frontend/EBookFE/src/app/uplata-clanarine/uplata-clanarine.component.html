@@ -1,0 +1,11 @@
+<h5>Uplata clanarine</h5>
+<table>
+  <tr><th>Naziv</th><th>Cena</th><th>Valuta</th><th>Pretplata</th></tr>
+  <tr>
+    <td><label for={{casopis.naziv}}>{{casopis.naziv}}</label></td>
+    <td><label for={{casopis.clanarina}}>{{casopis.clanarina}}</label></td>
+    <td><label>USD</label></td>
+    <td *ngIf="checkIfPaypal(casopis.id) == true"><button (click)="subscribeCasopis(casopis.id)">Pretplati</button></td>
+    <td *ngIf="checkIfPaypal(casopis.id) == false"><label>Nema paypal</label></td>
+  </tr>
+</table>

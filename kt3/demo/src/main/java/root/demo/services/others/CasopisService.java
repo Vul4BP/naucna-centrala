@@ -314,6 +314,16 @@ public class CasopisService implements ICasopisService{
         return String.valueOf(System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(10, 99));
     }
 
+    @Override
+    public void addKorisnikSaAktivnomClanarinom(String casopisName, String username){
+        Casopis casopis = casopisRepository.findByNaziv(casopisName);
+        UserDb user = userDbService.findByUsername(username);
+        List<UserDb> korisnici = casopis.getKorisniciSaAktivnomClanarinom();
+        korisnici.add(user);
+        casopis.setKorisniciSaAktivnomClanarinom(korisnici);
+        casopisRepository.save(casopis);
+    }
+
     /*
     public CasopisDto postujSelleru(Casopis casopis){
         String url = "https://localhost:8443/sellerservice/magazine/add";

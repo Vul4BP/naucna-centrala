@@ -64,12 +64,12 @@ public class ValidateRegistrationFormService implements JavaDelegate{
                 Object obj = formField.getFieldValue();
                 ObjectMapper mapper = new ObjectMapper();
                 List<NaucnaOblast> naucneOblasti = mapper.convertValue(obj, new TypeReference<List<NaucnaOblast>>() { });
-                userDto.setOblasti(naucneOblasti);
+                userDto.setNaucneoblasti(naucneOblasti);
             }
         }
 
         if(loginService.validateUser(userDto)){
-            UserDto retUserDto = loginService.register(userDto, false, MyConfig.roleObican);
+            UserDto retUserDto = loginService.register(userDto, false, MyConfig.roleAutor); //registruje se kao autor autor
             if (retUserDto != null) {
                 execution.setVariable("validacija", true);
                 System.out.println("VALIDACIJA REGISTRACIONE FORME USPESNA");

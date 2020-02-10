@@ -16,4 +16,5 @@ public interface ICasopisService {
     public abstract CasopisDto editCasopis(CasopisDto casopisDto);
     public List<CasopisDto> getAllMagazines();
     public Casopis getById(Long id);
+    public void addKorisnikSaAktivnomClanarinom(String casopisName, String username);
 }

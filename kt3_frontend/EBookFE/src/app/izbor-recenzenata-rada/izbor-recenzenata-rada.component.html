@@ -1,0 +1,55 @@
+<h5>Izbor recenzenata</h5>
+<div>
+  <table *ngIf="tasks && tasks.length > 0">
+    <tr><th>Ime Taska</th><th colspan="2">Id Taska</th></tr>
+    <tr *ngFor="let task of tasks"><td>{{task.name}}</td><td>{{task.taskId}}</td><td><button (click)="getIzborRecenzenataForm(task.taskId)">Get Form</button></td></tr>
+  </table>
+</div>
+
+<div *ngIf="formFields && listaSvihRecenzenata && listaSvihRecenzenata.length > 1">
+  <table>
+    <tr><th colspan="2">Filtriranje</th></tr>
+    <tr>
+      <td><label>Nacin filtriranja</label></td>
+      <td>
+        <select (change)="objChanged($event)">
+          <option>Svi</option>
+          <option>Ista Oblast</option>
+          <option>More Like This</option>
+          <option>Geo</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div> 
+  <form *ngIf="formFields && listaSvihRecenzenata && listaSvihRecenzenata.length > 1" #f="ngForm" (ngSubmit)="onSubmit(f.value, f)" ngNativeValidate>
+    <table>
+      <tr *ngIf="listaRecenzenata && listaRecenzenata.length > 0" ><th>Recenzenti</th><th colspan="2">Oblasti</th></tr>
+      <tr *ngFor="let field of listaRecenzenata" >
+        <td><label for={{field.username}}>{{field.username}}</label></td>
+        <td>
+          <label class="labelNaucneOblasti" *ngFor="let oblast of field.naucneoblasti" for="{{oblast.name}}">{{oblast.name}}</label>
+        </td>
+        <td><input type="checkbox" name={{field.username}} ngModel></td>
+      </tr>
+      <tr *ngIf="formFields && formFields.length > 0"><th colspan="3">Podaci</th></tr>
+      <tr *ngFor="let field of formFields">
+          <td><label *ngIf="field.id != 'naucna_oblast_rada'" for={{field.id}}>{{field.label}}</label></td>
+          <td colspan="2" *ngIf="field.type.name=='boolean'"><input type="checkbox" name={{field.id}} ngModel></td>
+          <td colspan="2" *ngIf="field.type.name=='string'"><input type="text" name={{field.id}} hidden [(ngModel)]="field.defaultValue"></td>
+          <td colspan="2" *ngIf="field.type.name=='long'"><input type="number" name={{field.id}} ngModel></td>
+          <td colspan="2" *ngIf="field.type.name=='enum'"><select name={{field.id}} ngModel>
+            <option *ngFor="let val of enumValues[field.id]" value={{val}}>
+              {{field.type.values[val]}}
+            </option>
+          </select></td>
+      </tr>
+      <tr><td colspan="2"><input type="submit"></td></tr>
+    </table>
+  </form>
+</div>
+<div>
+  <label>{{message}}</label>
+</div>
